@@ -1,17 +1,29 @@
-//
-//  VovlekayApp.swift
-//  Vovlekay
-//
-//  Created by Aleksey Dolinin on 06.07.2024.
-//
-
 import SwiftUI
 
 @main
 struct VovlekayApp: App {
+    
+    @State private var endDelay = false
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            SplashView()
+                .onAppear {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                        print("---")
+                        self.endDelay = true
+                    }
+                }
+                .fullScreenCover(isPresented: $endDelay, content: {
+                    NavigationView { InputTenantView() }
+                })
+//                .sheet(isPresented: $auth) {
+//                    NavigationView { InputTenantView() }
+//                }
+//                .navigationDestination(isPresented: $auth) {
+//                    InputTenantView()
+//                }
         }
+
     }
 }
