@@ -9,8 +9,7 @@ struct VovlekayApp: App {
         WindowGroup {
             SplashView()
                 .onAppear {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                        print("---")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                         self.endDelay = true
                     }
                 }
@@ -23,7 +22,13 @@ struct VovlekayApp: App {
 //                .navigationDestination(isPresented: $auth) {
 //                    InputTenantView()
 //                }
+            
+
+            
         }
 
     }
 }
+
+
+
