@@ -143,7 +143,7 @@ extension InputTenantView {
         
         func sendCode() {
             if !codeTenant.isEmpty {
-                Servise.sendCodeTenant(codeTenant: codeTenant)
+                Servise.sendCodeTenant(codeTenant: codeTenant.replacingOccurrences(of: " ", with: ""))
             }
         }
     }
