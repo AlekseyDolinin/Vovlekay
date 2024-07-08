@@ -1,8 +1,14 @@
 import Foundation
 import SwiftUI
 
-class SelectLanguage {
+class AppLanguage {
     
+    enum Language {
+        case ru
+        case en
+        case kz
+    }
+
     private static var language: Language = .ru
     
     static func changeLanguage(language: Language) -> Language {

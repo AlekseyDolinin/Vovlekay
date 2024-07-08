@@ -1,7 +1,7 @@
 import Foundation
 
-enum Language {
-    case ru
-    case en
-    case kz
-}
+//enum Language {
+//    case ru
+//    case en
+//    case kz
+//}

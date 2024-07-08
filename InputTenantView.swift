@@ -10,17 +10,12 @@ struct InputTenantView: View {
     private let widthScreen = UIScreen.main.bounds.width
     
     var body: some View {
-        
         NavigationStack {
-            
             ZStack {
                 Color.black
                     .ignoresSafeArea()
-                
                 VStack {
-                    
                     Spacer(minLength: 100)
-                    
                     Image("logo_frame")
                         .renderingMode(.template)
                         .foregroundColor(._yellow)
@@ -28,16 +23,12 @@ struct InputTenantView: View {
                         .frame(width: widthScreen / 4)
                         .frame(height: widthScreen / 4)
                         .frame(alignment: .center)
-                    
                     Spacer(minLength: 32)
-                    
                     Text(textInputCode)
                         .foregroundStyle(.white)
                         .multilineTextAlignment(.center)
                         .font(.custom_(.rootUI_Bold, size: 18))
-                    
                     Spacer(minLength: 16)
-                    
                     TextField("", text: $vm.codeTenant, prompt: Text(textCode).foregroundColor(.gray))
                         .foregroundStyle(.white)
                         .multilineTextAlignment(.center)
@@ -47,9 +38,9 @@ struct InputTenantView: View {
                         .background(.gray.opacity(0.1))
                         .cornerRadius(8)
                         .font(.custom_(.rootUI_Regular, size: 18))
+                        .autocorrectionDisabled()
                     
                     Spacer(minLength: 48)
-                    
                     Button {
                         showingAlert = vm.codeTenant.isEmpty
                         vm.sendCode()
@@ -65,9 +56,7 @@ struct InputTenantView: View {
                     .alert(textCodeInputIsEmpty, isPresented: $showingAlert) {
                         Button("OK", role: .cancel) { }
                     }
-                    
                     Spacer(minLength: 48)
-                    
                     Text(textComment)
                         .foregroundStyle(.white.opacity(0.5))
                         .multilineTextAlignment(.center)
@@ -75,16 +64,12 @@ struct InputTenantView: View {
                         .padding(.leading, 24)
                         .padding(.trailing, 24)
                         .frame(height: 56)
-                    
                     Spacer(minLength: 48)
-                    
                     ZStack {
                         Color.clear
-                        
                         VStack {
                             HStack {
                                 VStack {
-                                    
                                     Button(action: {
                                         vm.changeLanguage(language: .ru)
                                     }, label: {
@@ -95,13 +80,11 @@ struct InputTenantView: View {
                                             .foregroundColor(Color.white)
                                             .font(.custom_(.rootUI_Regular, size: 18))
                                     })
-                                    
                                     Rectangle()
                                         .fill(.white)
                                         .frame(width: 60, height: 3)
                                         .opacity(vm.language == .ru ? 1 : 0)
                                 }
-                                
                                 VStack {
                                     Button(action: {
                                         vm.changeLanguage(language: .en)
@@ -113,13 +96,11 @@ struct InputTenantView: View {
                                             .foregroundColor(Color.white)
                                             .font(.custom_(.rootUI_Regular, size: 18))
                                     })
-                                    
                                     Rectangle()
                                         .fill(.white)
                                         .frame(width: 60, height: 3)
                                         .opacity(vm.language == .en ? 1 : 0)
                                 }
-                                
                                 VStack {
                                     Button(action: {
                                         vm.changeLanguage(language: .kz)
@@ -131,7 +112,6 @@ struct InputTenantView: View {
                                             .foregroundColor(Color.white)
                                             .font(.custom_(.rootUI_Regular, size: 18))
                                     })
-                                    
                                     Rectangle()
                                         .fill(.white)
                                         .frame(width: 60, height: 3)
@@ -142,7 +122,6 @@ struct InputTenantView: View {
                     }
                     .frame(width: 120)
                     .frame(height: 48)
-                    
                     Spacer(minLength: 200)
                 }
             }
@@ -156,10 +135,10 @@ extension InputTenantView {
     class ViewModel {
         
         var codeTenant: String = ""
-        var language: Language = .ru
+        var language: AppLanguage.Language = .ru
         
-        func changeLanguage(language: Language) {
-            self.language = SelectLanguage.changeLanguage(language: language)
+        func changeLanguage(language: AppLanguage.Language) {
+            self.language = AppLanguage.changeLanguage(language: language)
         }
         
         func sendCode() {
@@ -174,18 +153,57 @@ extension InputTenantView {
 extension InputTenantView {
     
     var textInputCode: String {
-        vm.language == .ru ? "Введите код компании" : "Enter company code"
+        switch vm.language {
+        case .ru:
+            return "Введите код компании"
+        case .en:
+            return "Enter company code"
+        case .kz:
+            return "Компания кодын енгізіңіз"
+        }
     }
+    
     var textCode: String {
-        vm.language == .ru ? "Код" : "Code"
+        switch vm.language {
+        case .ru:
+            return "Код"
+        case .en:
+            return "Code"
+        case .kz:
+            return "Код"
+        }
     }
+    
     var textSend: String {
-        vm.language == .ru ? "Отправить" : "Send"
+        switch vm.language {
+        case .ru:
+            return "Отправить"
+        case .en:
+            return "Send"
+        case .kz:
+            return "Жіберу"
+        }
     }
+    
     var textComment: String {
-        vm.language == .ru ? "Для работы приложения требуется подключение к сети интернет" : "App requires internet connection"
+        switch vm.language {
+        case .ru:
+            return "Для работы приложения требуется подключение к сети интернет"
+        case .en:
+            return "App requires internet connection"
+        case .kz:
+            return "Қолданба жұмыс істеуі үшін интернет байланысы қажет."
+        }
     }
+    
     var textCodeInputIsEmpty: String {
-        vm.language == .ru ? "Необходимо ввести код компании" : "You must enter the company code"
+        switch vm.language {
+        case .ru:
+            return "Необходимо ввести код компании"
+        case .en:
+            return "You must enter the company code"
+        case .kz:
+            return "Сіз компания кодын енгізуіңіз керек"
+        }
     }
 }
