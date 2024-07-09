@@ -3,19 +3,19 @@ import SwiftUI
 @main
 struct VovlekayApp: App {
     
-    @State private var endDelay = false
+//    @State private var endDelay = false
     
     var body: some Scene {
         WindowGroup {
             SplashView()
-                .onAppear {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                        self.endDelay = true
-                    }
-                }
-                .fullScreenCover(isPresented: $endDelay, content: {
-                    NavigationView { InputTenantView() }
-                })
+//                .onAppear {
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+//                        self.endDelay = true
+//                    }
+//                }
+//                .fullScreenCover(isPresented: $endDelay, content: {
+//                    NavigationView { InputTenantView() }
+//                })
 //                .sheet(isPresented: $auth) {
 //                    NavigationView { InputTenantView() }
 //                }
@@ -26,9 +26,5 @@ struct VovlekayApp: App {
 
             
         }
-
     }
 }
-
-
-

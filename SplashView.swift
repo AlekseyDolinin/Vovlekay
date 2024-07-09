@@ -4,9 +4,10 @@ import SwiftUI
 
 struct SplashView: View {
     
-    @State private var vm = ViewModel()
-    @State private var auth = false
-    
+    @ObservedObject var vm = ViewModel()
+    @State private var needEnterCodeTenant = false
+    @State private var needAuth = false
+
     let widthScreen = UIScreen.main.bounds.width
     
     init() {
@@ -18,11 +19,23 @@ struct SplashView: View {
             ZStack {
                 Color.black
                     .ignoresSafeArea()
-                
+                    .onAppear {
+                        if let hostname = UserDefaults.standard.string(forKey: .hostname) {
+                            Endpoint.hostname = hostname
+                            needAuth = true
+                        } else {
+                            needEnterCodeTenant = true
+                        }
+                    }
+                    .fullScreenCover(isPresented: $needEnterCodeTenant, content: {
+                        NavigationView { InputTenantView() }
+                    })
+                    .fullScreenCover(isPresented: $needAuth, content: {
+                        NavigationView { AuthView() }
+                    })
+
                 VStack {
-                    
                     Spacer()
-                    
                     Image("logo_frame")
                         .renderingMode(.template)
                         .foregroundColor(._yellow)
@@ -31,15 +44,11 @@ struct SplashView: View {
                         .frame(height: widthScreen / 2)
                         .frame(alignment: .center)
                         .clipped()
-                    
                     Spacer()
-                    
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle(tint: .white))
                         .scaleEffect(1.5)
-                    
                     Spacer()
-                    
                     Text(vm.getVersionApp())
                         .foregroundStyle(.white.opacity(0.3))
                         .multilineTextAlignment(.center)
@@ -67,8 +76,8 @@ struct SplashView: View {
 
 
 extension SplashView {
-    @Observable
-    class ViewModel {
+
+    class ViewModel: ObservableObject {
         
         func getVersionApp() -> String {
             let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] ?? "-"

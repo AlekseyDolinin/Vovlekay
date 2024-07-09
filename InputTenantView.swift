@@ -6,7 +6,8 @@ struct InputTenantView: View {
     
     @State var vm = ViewModel()
     @State private var showingAlert = false
-    
+    @StateObject private var ns = NetworkServices()
+
     private let widthScreen = UIScreen.main.bounds.width
     
     var body: some View {
@@ -44,6 +45,10 @@ struct InputTenantView: View {
                     Button {
                         showingAlert = vm.codeTenant.isEmpty
                         vm.sendCode()
+                        
+//                        print("json_2: \($ns.json.wrappedValue)")
+//                        print("count: \($ns.count.wrappedValue)")
+
                     } label: {
                         Text(textSend)
                             .foregroundStyle(.black)
@@ -56,6 +61,12 @@ struct InputTenantView: View {
                     .alert(textCodeInputIsEmpty, isPresented: $showingAlert) {
                         Button("OK", role: .cancel) { }
                     }
+//                    .alert("1212", isPresented: $ns) {
+//                        if $ns.json != nil {
+//                            print(12)
+//                        }
+//                    }
+                    
                     Spacer(minLength: 48)
                     Text(textComment)
                         .foregroundStyle(.white.opacity(0.5))
@@ -143,7 +154,8 @@ extension InputTenantView {
         
         func sendCode() {
             if !codeTenant.isEmpty {
-                Servise.sendCodeTenant(codeTenant: codeTenant.replacingOccurrences(of: " ", with: ""))
+                NetworkServices.shared.sendCodeTenant(codeTenant: codeTenant.replacingOccurrences(of: " ", with: ""))
+                
             }
         }
     }

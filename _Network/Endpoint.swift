@@ -1,18 +1,33 @@
 import Foundation
 
-public enum Endpoint {
+class Endpoint {
     
-    case sendTenantCode(code: String)
+    static var hostname = ""
     
-    public static func path(_ type: Endpoint) -> String {
+    private static var url_: String = { "https://" + hostname }()
+    
+    enum Endpoint {
+                
+        case sendTenantCode(code: String)
+        case test
         
-        //        let url = Config.protocol_ + Config.hostname
-        
+    }
+    
+    static func path(_ type: Endpoint) -> String {
         switch type {
             
         case .sendTenantCode(let code):
-            return ("http://auth.boxbattle.ru/tenant-search/?code=\(code)")/*.encodeUrl*/
-            
+            if code.prefix(5).lowercased() == "test-" {
+                return ("http://auth-test.boxbattle.ru/tenant-search/?code=\(code)").encodeUrl
+            } else if code.prefix(4) == "pre-" {
+                return ("http://auth-pre.boxbattle.ru/tenant-search/?code=\(code)").encodeUrl
+            } else {
+                return ("http://auth.boxbattle.ru/tenant-search/?code=\(code)").encodeUrl
+            }
+        case .test:
+            return url_ + "ttttt"
         }
     }
 }
+
+
