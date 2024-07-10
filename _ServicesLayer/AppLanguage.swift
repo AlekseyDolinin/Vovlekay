@@ -9,7 +9,7 @@ class AppLanguage {
         case kz
     }
 
-    private static var language: Language = .ru
+    static var language: Language = .ru
     
     static func changeLanguage(language: Language) -> Language {
         self.language = language

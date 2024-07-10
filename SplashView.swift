@@ -4,36 +4,15 @@ import SwiftUI
 
 struct SplashView: View {
     
-    @ObservedObject var vm = ViewModel()
-    @State private var needEnterCodeTenant = false
-    @State private var needAuth = false
-
-    let widthScreen = UIScreen.main.bounds.width
+    @StateObject var vm = ViewModelSplashView()
     
-    init() {
-        
-    }
+    let widthScreen = UIScreen.main.bounds.width
     
     var body: some View {
         NavigationStack {
             ZStack {
                 Color.black
                     .ignoresSafeArea()
-                    .onAppear {
-                        if let hostname = UserDefaults.standard.string(forKey: .hostname) {
-                            Endpoint.hostname = hostname
-                            needAuth = true
-                        } else {
-                            needEnterCodeTenant = true
-                        }
-                    }
-                    .fullScreenCover(isPresented: $needEnterCodeTenant, content: {
-                        NavigationView { InputTenantView() }
-                    })
-                    .fullScreenCover(isPresented: $needAuth, content: {
-                        NavigationView { AuthView() }
-                    })
-
                 VStack {
                     Spacer()
                     Image("logo_frame")
@@ -54,34 +33,33 @@ struct SplashView: View {
                         .multilineTextAlignment(.center)
                         .font(.custom_(.rootUI_Bold, size: 14))
                 }
-//                .onAppear {
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-//                        print("---")
-//                        self.auth = true
-//                    }
-//                }
-//                .fullScreenCover(isPresented: $auth, content: {
-//                    NavigationView { InputTenantView() }
-//                })
-//                .sheet(isPresented: $auth) {
-//                    NavigationView { InputTenantView() }
-//                }
-//                .navigationDestination(isPresented: $auth) {
-//                    InputTenantView()
-//                }
             }
+            .fullScreenCover(isPresented: $vm.showEnterCodeTenant, content: {
+                NavigationView { InputTenantView() }
+            })
         }
     }
 }
 
 
-extension SplashView {
-
-    class ViewModel: ObservableObject {
-        
-        func getVersionApp() -> String {
-            let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] ?? "-"
-            return "\(appVersion)"
+class ViewModelSplashView: ObservableObject {
+    
+    @Published var showEnterCodeTenant = false
+    
+    func getVersionApp() -> String {
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] ?? "-"
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            // проверка авторизации
+            if Auth.checkAuth() == false {
+                self.showEnterCodeTenant = true
+            } else {
+                self.getStartData()
+            }
         }
+        return "\(version)"
+    }
+    
+    private func getStartData() {
+        print("getStartData")
     }
 }

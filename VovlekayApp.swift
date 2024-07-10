@@ -10,7 +10,8 @@ struct VovlekayApp: App {
             SplashView()
 //                .onAppear {
 //                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-//                        self.endDelay = true
+////                        self.endDelay = true
+//                        SplashView()
 //                    }
 //                }
 //                .fullScreenCover(isPresented: $endDelay, content: {

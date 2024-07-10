@@ -2,27 +2,32 @@ import Foundation
 import SwiftUI
 import Combine
 
-class NetworkServices: ObservableObject {
-        
-    static let shared = NetworkServices()
-        
-    @Published var json: JSON? = nil
-        
-    let nm = NetworkManager()
+final class NetworkServices: ObservableObject {
+                
+    let networkManager = NetworkManager()
     
-    func sendCodeTenant(codeTenant: String) {
+    func sendCodeTenant(codeTenant: String) async -> JSON? {
         let link = Endpoint.path(.sendTenantCode(code: codeTenant))
-        print("link: \(link)")
-        Task(priority: .userInitiated) {
-            json = await nm.getJSON(link: link)
-            print("json_1: \(json)")
-            // сохранение кода тенанта для отображения в меню
-//            UserDefaults.standard.set(codeTenant, forKey: .codeTenant)
-//            UserDefaults.standard.set(json!["domain"].string, forKey: .hostname)
-//            Endpoint.hostname = json!["domain"].stringValue
-//            DispatchQueue.main.async {
-//                print("loadDataForStart!!!!!!")
-//            }
-        }
+        let json = await networkManager.getJSON(link: link)
+        return json
     }
+    
+    func getOptionsTenant() async -> JSON? {
+        let link = Endpoint.path(.getOptionsTenant)
+        let json = await networkManager.getJSON(link: link)
+        return json
+    }
+    
+    func getColorShemeTenant() {
+        
+    }
+    
+    func getLanguageDictionary() {
+        
+    }
+    
+    func getUserData() {
+        
+    }
+    
 }

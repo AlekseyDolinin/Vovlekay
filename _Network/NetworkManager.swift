@@ -6,22 +6,16 @@ class NetworkManager {
         
     func getJSON(link: String, loader: Bool = true, checkError: Bool = true) async -> JSON? {
         let dataResponse: Response_ = await _request(link)
-        if dataResponse.error_ != nil { ErrorParser.parse(input: dataResponse) }
-        
-        if let httpResponse = dataResponse.response_ as? HTTPURLResponse {
-            print("httpResponse.statusCode: \(httpResponse.statusCode)")
-            if httpResponse.statusCode >= 400 && httpResponse.statusCode != 401 {
-                ErrorParser.parse(input: dataResponse)
-            }
+        if dataResponse.error_ != nil { ErrorParser.shared.parse(input: dataResponse) }
+        if let data = dataResponse.data_ {
+            let json = JSON(data)
+            return json
         } else {
-            if let data = dataResponse.data_ {
-                let json = JSON(data)
-                return json
-            } else {
-                ErrorParser.parse(input: dataResponse)
+            if let httpResponse = dataResponse.response_ as? HTTPURLResponse {
+                print("statusCode: \(httpResponse.statusCode)")
             }
+            return nil
         }
-        return JSON()
     }
     
     
