@@ -11,6 +11,9 @@ class Endpoint {
         case sendTenantCode(code: String)
         case getOptionsTenant
         case linkAuth
+        case getColorShemeTenant
+        case getLanguageDictionary
+        case getUserData
         
     }
     
@@ -38,6 +41,15 @@ class Endpoint {
             default:
                 return url_
             }
+            
+        case .getColorShemeTenant:
+            return url_ + "/game/api/v4/color_scheme/"
+            
+        case .getLanguageDictionary:
+            return url_ + "/game/api/v6/get_language_dictionary/"
+            
+        case .getUserData:
+            return url_ + "/api/get_user_data/"
             
             
             

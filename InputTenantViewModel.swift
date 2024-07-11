@@ -32,7 +32,7 @@ class InputTenantViewModel: ObservableObject {
                 } else {
                     // сохранение кода тенанта для отображения в меню
                     UserDefaults.standard.set(codeTenant, forKey: .codeTenant)
-//                    UserDefaults.standard.set(json!["domain"].string, forKey: .hostname)
+                    UserDefaults.standard.set(json!["domain"].string, forKey: .hostname)
                     Endpoint.hostname = json!["domain"].stringValue
                     getOptionsTenant()
                 }

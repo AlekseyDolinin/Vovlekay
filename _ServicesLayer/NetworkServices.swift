@@ -4,30 +4,34 @@ import Combine
 
 final class NetworkServices: ObservableObject {
                 
+    static let shared = NetworkServices()
+    
     let networkManager = NetworkManager()
     
     func sendCodeTenant(codeTenant: String) async -> JSON? {
         let link = Endpoint.path(.sendTenantCode(code: codeTenant))
-        let json = await networkManager.getJSON(link: link)
-        return json
+        return await networkManager.getJSON(link: link)
     }
     
     func getOptionsTenant() async -> JSON? {
         let link = Endpoint.path(.getOptionsTenant)
-        let json = await networkManager.getJSON(link: link)
-        return json
+        return await networkManager.getJSON(link: link)
     }
     
-    func getColorShemeTenant() {
-        
+    func getColorShemeTenant() async -> JSON? {
+        let link = Endpoint.path(.getColorShemeTenant)
+        print("link: \(link)")
+        return await networkManager.getJSON(link: link)
     }
     
-    func getLanguageDictionary() {
-        
+    func getLanguageDictionary() async -> JSON? {
+        let link = Endpoint.path(.getLanguageDictionary)
+        return await networkManager.getJSON(link: link)
     }
     
-    func getUserData() {
-        
+    func getUserData() async -> JSON? {
+        let link = Endpoint.path(.getUserData)
+        return await networkManager.getJSON(link: link)
     }
     
 }

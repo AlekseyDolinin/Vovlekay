@@ -5,7 +5,8 @@ import SwiftUI
 struct InputTenantView: View {
     
     @StateObject var vm = InputTenantViewModel()
-    
+    @State private var authIsSucces = false
+        
     private let widthScreen = UIScreen.main.bounds.width
     
     var body: some View {
@@ -13,6 +14,10 @@ struct InputTenantView: View {
             ZStack {
                 Color.black
                     .ignoresSafeArea()
+                //
+                    .onAppear(perform: {
+                        vm.codeTenant = "test-1"
+                    })
                 ScrollView(showsIndicators: false) {
                     VStack {
                         Spacer(minLength: 100)
@@ -124,9 +129,13 @@ struct InputTenantView: View {
             .alert(vm.textError, isPresented: $vm.showAlert) {
                 Button("OK", role: .cancel) { }
             }
-            
             .sheet(isPresented: $vm.showAuhtView) {
-                NavigationView { WebViewAuth() }
+                NavigationView { WebViewAuth(authIsSucces: $authIsSucces) }
+                    .background(Color.black)
+                    .ignoresSafeArea()
+            }
+            .sheet(isPresented: $authIsSucces) {
+                NavigationView { Home() }
                     .background(Color.black)
                     .ignoresSafeArea()
             }

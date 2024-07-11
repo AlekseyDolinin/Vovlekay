@@ -3,12 +3,12 @@ import SwiftUI
 
 class AppLanguage {
     
-    enum Language {
-        case ru
-        case en
-        case kz
+    enum Language: String {
+        case ru = "ru-RU"
+        case en = "en-US"
+        case kz = "kz-KZ"
     }
-
+    
     static var language: Language = .ru
     
     static func changeLanguage(language: Language) -> Language {

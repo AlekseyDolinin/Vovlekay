@@ -3,34 +3,54 @@
 import SwiftUI
 import WebKit
 import UIKit
+import MessageUI
+
+class Coordinator: AuthWebVCDelegate {
+
+    let authIsSucces: Binding<Bool>
+    
+    init(authIsSucces: Binding<Bool>) {
+        self.authIsSucces = authIsSucces
+    }
+    
+    func authIsSucces(_ result: Bool) {
+        
+        print("result: \(result)")
+        authIsSucces.wrappedValue = result
+    }
+}
 
 struct WebViewAuth: UIViewControllerRepresentable {
 
-    typealias UIViewControllerType = AuthWebVC
+    var authIsSucces: Binding<Bool>
     
     func makeUIViewController(context: Context) -> AuthWebVC {
         let vc = AuthWebVC()
+        vc.delegate = context.coordinator
         return vc
     }
 
-    func updateUIViewController(_ uiViewController: AuthWebVC, context: Context) {
-        
+    func updateUIViewController(_ uiViewController: AuthWebVC, context: Context) { }
+    
+    func makeCoordinator() -> Coordinator {
+        return Coordinator(authIsSucces: authIsSucces)
     }
 }
 
 
 
-import UIKit
-import WebKit
-import MessageUI
+protocol AuthWebVCDelegate: AnyObject {
+    func authIsSucces(_ result: Bool)
+}
 
-class AuthWebVC: UIViewController {
-        
+class AuthWebVC: UIViewController, ObservableObject {
+                
+    weak var delegate: AuthWebVCDelegate?
+    
+    var authIsSucces = false
+    
     var basicWebView: WKWebView!
     var webViewURLObserver: NSKeyValueObservation?
-    
-//    private let changeTenantButton = ButtonFirst()
-    
     var linkAuth = Endpoint.path(.linkAuth)
     
     override func viewDidLoad() {
@@ -40,6 +60,7 @@ class AuthWebVC: UIViewController {
         webConfiguration.preferences.javaScriptCanOpenWindowsAutomatically = true
         webConfiguration.applicationNameForUserAgent = "Version/8.0.2 Safari/600.2.5"
         basicWebView = WKWebView(frame: .zero, configuration: webConfiguration)
+        basicWebView.cleanAllCookies()
         basicWebView.uiDelegate = self
         createWebView()
         //
@@ -50,13 +71,12 @@ class AuthWebVC: UIViewController {
         webViewURLObserver = basicWebView.observe(\.url, options: .new) { webView, change in
             guard let newValueUrl = change.newValue else { return }
             if newValueUrl?.lastPathComponent == "home" {
-                self.basicWebView.alpha = 0
                 LocalStorage.Cookies.saveCookie(webView: self.basicWebView)
+                self.dismiss(animated: true) {
+                    self.delegate?.authIsSucces(true)
+                }
             }
         }
-        //
-//        navigationController?.navigationBar.isHidden = true
-//        tabBarController?.tabBar.isHidden = true
     }
     
     deinit { print("deinit AuthWebVC") }
@@ -69,7 +89,7 @@ class AuthWebVC: UIViewController {
         basicWebView.clearsContextBeforeDrawing = true
         basicWebView.scrollView.showsVerticalScrollIndicator = false
         basicWebView.scrollView.showsHorizontalScrollIndicator = false
-//        basicWebView.scrollView.backgroundColor = .BB_BGPrimary
+        basicWebView.scrollView.backgroundColor = .black
         basicWebView.contentMode = .scaleAspectFill
         //
         basicWebView.translatesAutoresizingMaskIntoConstraints = false
@@ -78,52 +98,10 @@ class AuthWebVC: UIViewController {
         basicWebView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         basicWebView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
     }
-    
-//    private func saveCookie() {
-//        self.basicWebView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
-//            for cookie in cookies {
-//                if cookie.name == "user_id" && cookie.domain == Config.hostname {
-//                    var cookieDict = [String : AnyObject]()
-//                    cookieDict[cookie.name] = cookie.properties as AnyObject?
-//                    // save cookies
-//                    UserDefaults.standard.set(cookieDict, forKey: .cookiesKey)
-//                    print("saveCookie")
-//                    appDelegate.loadDataForStart()
-//                }
-//            }
-//        }
-//    }
-    
-//    private func createChangeTenantButton() {
-//        view.addSubview(changeTenantButton)
-//        changeTenantButton.setTitle("Ввести другой код компании", for: .normal)
-//        changeTenantButton.addTarget(self, action: #selector(changeTenantAction), for: .touchUpInside)
-//        //
-//        changeTenantButton.translatesAutoresizingMaskIntoConstraints = false
-//        changeTenantButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -24).isActive = true
-//        changeTenantButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
-//        changeTenantButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
-//        changeTenantButton.heightAnchor.constraint(equalToConstant: 48).isActive = true
-//    }
-    
-//    @objc private func changeTenantAction() {
-//        print("changeTenantAction")
-//        showLoader()
-//        Logout().logout()
-//    }
 }
 
 
 extension AuthWebVC: UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate {
-    
-    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-//        showLoader()
-    }
-    
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-//        hideLoader()
-//        createChangeTenantButton()
-    }
     
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
         guard let temp = navigationAction.request.mainDocumentURL?.absoluteString else { return nil }
@@ -156,5 +134,27 @@ extension AuthWebVC: MFMailComposeViewControllerDelegate {
     
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
         controller.dismiss(animated: true)
+    }
+}
+
+
+
+
+extension WKWebView {
+
+    func cleanAllCookies() {
+        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+        print("All cookies deleted")
+
+        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
+            records.forEach { record in
+                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+                print("Cookie ::: \(record) deleted")
+            }
+        }
+    }
+
+    func refreshCookies() {
+        self.configuration.processPool = WKProcessPool()
     }
 }

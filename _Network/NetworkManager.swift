@@ -51,12 +51,11 @@ class NetworkManager {
     
     
     public func setCookieInRequest(_ request_: inout URLRequest) {
-//        guard let savedCookie = UserDefaults.standard.dictionary(forKey: .cookiesKey) else { return }
-//        guard let dictionary = savedCookie["user_id"] as? Dictionary<String, Any> else { return }
-//        guard let value: String = dictionary["Value"] as? String else { return }
-//        guard let name: String = dictionary["Name"] as? String else { return }
-//        let cookies_header = "\(name)=\(value); " + "language=\(gLanguage.rawValue);"
-//        request_.setValue(cookies_header, forHTTPHeaderField: "Cookie")
+        let name: String = LocalStorage.keychain["name"] ?? ""
+        let value: String = LocalStorage.keychain["value"] ?? ""
+        let languageString: String = AppLanguage.language.rawValue
+        let cookies_header = "\(name)=\(value); " + "language=\(languageString);"
+        request_.setValue(cookies_header, forHTTPHeaderField: "Cookie")
     }
     
     
@@ -65,17 +64,5 @@ class NetworkManager {
         case post    = "POST"
         case put     = "PUT"
         case delete  = "DELETE"
-    }
-}
-
-
-public extension String{
-    
-    var encodeUrl : String {
-        return self.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!
-    }
-    
-    var decodeUrl : String {
-        return self.removingPercentEncoding!
     }
 }
