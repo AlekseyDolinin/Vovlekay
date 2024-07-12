@@ -5,6 +5,7 @@ import SwiftUI
 struct SplashView: View {
     
     @StateObject var vm = ViewModelSplashView()
+    @State private var authIsSucces = false
     
     let widthScreen = UIScreen.main.bounds.width
     
@@ -13,6 +14,9 @@ struct SplashView: View {
             ZStack {
                 Color.black
                     .ignoresSafeArea()
+                    .onAppear {
+                        vm.getVersionApp()
+                    }
                 VStack {
                     Spacer()
                     Image("logo_frame")
@@ -35,10 +39,10 @@ struct SplashView: View {
                 }
             }
             .navigationDestination(isPresented: $vm.showEnterCodeTenant) {
-                InputTenantView()
+                InputTenantView(authIsSucces: authIsSucces)
             }
-            .onAppear {
-                vm.getVersionApp()
+            .navigationDestination(isPresented: $vm.authIsCompleted) {
+                Home()
             }
         }
     }
@@ -48,6 +52,7 @@ struct SplashView: View {
 class ViewModelSplashView: ObservableObject {
     
     @Published var showEnterCodeTenant = false
+    @Published var authIsCompleted = false
     @Published var versionApp = ""
     
     func getVersionApp() {
@@ -60,6 +65,7 @@ class ViewModelSplashView: ObservableObject {
             if Auth.checkAuth() == false {
                 self.showEnterCodeTenant = true
             } else {
+                self.authIsCompleted = true
                 self.getStartData()
             }
         }

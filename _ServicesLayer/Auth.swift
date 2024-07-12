@@ -8,6 +8,8 @@ class Auth {
     /// false - авторизация не пройдена
     class func checkAuth() -> Bool {
         
+        return false
+        
         let name = LocalStorage.keychain["name"]
         let value = LocalStorage.keychain["value"]
         

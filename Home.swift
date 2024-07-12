@@ -9,6 +9,7 @@ struct Home: View {
             ZStack {
                 Color.purple
                     .ignoresSafeArea()
+                    .navigationBarBackButtonHidden()
             }
         }
     }

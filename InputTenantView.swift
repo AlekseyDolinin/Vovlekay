@@ -5,7 +5,7 @@ import SwiftUI
 struct InputTenantView: View {
     
     @StateObject var vm = InputTenantViewModel()
-    @State private var authIsSucces = false
+    @State var authIsSucces = false
         
     private let widthScreen = UIScreen.main.bounds.width
     
@@ -18,6 +18,7 @@ struct InputTenantView: View {
                 //
                     .onAppear(perform: {
                         vm.codeTenant = "test-1"
+                        vm.sendCode()
                     })
                     
                 ScrollView(showsIndicators: false) {
@@ -136,11 +137,14 @@ struct InputTenantView: View {
                     .background(Color.black)
                     .ignoresSafeArea()
             }
-            .sheet(isPresented: $authIsSucces) {
-                NavigationView { Home() }
-                    .background(Color.black)
-                    .ignoresSafeArea()
-            }
+            
+            .
+//            .onReceive($authIsSucces, perform: { _ in
+//                print("--------")
+//            })
+//            .sheet(isPresented: $authIsSucces) {
+//                NavigationView { Home() }
+//            }
         }
     }
 }

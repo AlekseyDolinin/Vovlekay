@@ -5,21 +5,6 @@ import WebKit
 import UIKit
 import MessageUI
 
-class Coordinator: AuthWebVCDelegate {
-
-    let authIsSucces: Binding<Bool>
-    
-    init(authIsSucces: Binding<Bool>) {
-        self.authIsSucces = authIsSucces
-    }
-    
-    func authIsSucces(_ result: Bool) {
-        
-        print("result: \(result)")
-        authIsSucces.wrappedValue = result
-    }
-}
-
 struct WebViewAuth: UIViewControllerRepresentable {
 
     var authIsSucces: Binding<Bool>
@@ -37,6 +22,20 @@ struct WebViewAuth: UIViewControllerRepresentable {
     }
 }
 
+
+class Coordinator: AuthWebVCDelegate {
+
+    let authIsSucces: Binding<Bool>
+    
+    init(authIsSucces: Binding<Bool>) {
+        self.authIsSucces = authIsSucces
+    }
+    
+    func authIsSucces(_ result: Bool) {
+        print("result: \(result)")
+        authIsSucces.wrappedValue = result
+    }
+}
 
 
 protocol AuthWebVCDelegate: AnyObject {
@@ -75,6 +74,16 @@ class AuthWebVC: UIViewController, ObservableObject {
                 self.dismiss(animated: true) {
                     self.delegate?.authIsSucces(true)
                 }
+            }
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            print("FALSE AUTH TRUE")
+            self.dismiss(animated: true) {
+                self.delegate?.authIsSucces(true)
             }
         }
     }
