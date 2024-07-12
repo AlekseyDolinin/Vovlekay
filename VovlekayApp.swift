@@ -23,9 +23,6 @@ struct VovlekayApp: App {
 //                .navigationDestination(isPresented: $auth) {
 //                    InputTenantView()
 //                }
-            
-
-            
         }
     }
 }

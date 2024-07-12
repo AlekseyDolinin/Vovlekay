@@ -14,10 +14,12 @@ struct InputTenantView: View {
             ZStack {
                 Color.black
                     .ignoresSafeArea()
+                    .navigationBarBackButtonHidden()
                 //
                     .onAppear(perform: {
                         vm.codeTenant = "test-1"
                     })
+                    
                 ScrollView(showsIndicators: false) {
                     VStack {
                         Spacer(minLength: 100)

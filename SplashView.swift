@@ -34,9 +34,9 @@ struct SplashView: View {
                         .font(.custom_(.rootUI_Bold, size: 14))
                 }
             }
-            .fullScreenCover(isPresented: $vm.showEnterCodeTenant, content: {
-                NavigationView { InputTenantView() }
-            })
+            .navigationDestination(isPresented: $vm.showEnterCodeTenant) {
+                InputTenantView()
+            }
             .onAppear {
                 vm.getVersionApp()
             }
