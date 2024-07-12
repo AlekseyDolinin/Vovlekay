@@ -39,7 +39,7 @@ struct SplashView: View {
                 }
             }
             .navigationDestination(isPresented: $vm.showEnterCodeTenant) {
-                InputTenantView(authIsSucces: authIsSucces)
+                InputTenantView()
             }
             .navigationDestination(isPresented: $vm.authIsCompleted) {
                 Home()

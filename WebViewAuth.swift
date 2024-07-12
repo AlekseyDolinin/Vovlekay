@@ -32,7 +32,6 @@ class Coordinator: AuthWebVCDelegate {
     }
     
     func authIsSucces(_ result: Bool) {
-        print("result: \(result)")
         authIsSucces.wrappedValue = result
     }
 }
@@ -74,16 +73,6 @@ class AuthWebVC: UIViewController, ObservableObject {
                 self.dismiss(animated: true) {
                     self.delegate?.authIsSucces(true)
                 }
-            }
-        }
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-            print("FALSE AUTH TRUE")
-            self.dismiss(animated: true) {
-                self.delegate?.authIsSucces(true)
             }
         }
     }

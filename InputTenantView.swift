@@ -6,7 +6,7 @@ struct InputTenantView: View {
     
     @StateObject var vm = InputTenantViewModel()
     @State var authIsSucces = false
-        
+    
     private let widthScreen = UIScreen.main.bounds.width
     
     var body: some View {
@@ -15,12 +15,6 @@ struct InputTenantView: View {
                 Color.black
                     .ignoresSafeArea()
                     .navigationBarBackButtonHidden()
-                //
-                    .onAppear(perform: {
-                        vm.codeTenant = "test-1"
-                        vm.sendCode()
-                    })
-                    
                 ScrollView(showsIndicators: false) {
                     VStack {
                         Spacer(minLength: 100)
@@ -137,14 +131,9 @@ struct InputTenantView: View {
                     .background(Color.black)
                     .ignoresSafeArea()
             }
-            
-            .
-//            .onReceive($authIsSucces, perform: { _ in
-//                print("--------")
-//            })
-//            .sheet(isPresented: $authIsSucces) {
-//                NavigationView { Home() }
-//            }
+            .navigationDestination(isPresented: $authIsSucces) {
+                Home()
+            }
         }
     }
 }
