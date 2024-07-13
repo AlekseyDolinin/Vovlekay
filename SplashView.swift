@@ -4,7 +4,7 @@ import SwiftUI
 
 struct SplashView: View {
     
-    @StateObject var vm = ViewModelSplashView()
+    @StateObject var vm = SplashViewModel()
     @State private var authIsSucces = false
     
     let widthScreen = UIScreen.main.bounds.width
@@ -21,7 +21,7 @@ struct SplashView: View {
                     Spacer()
                     Image("logo_frame")
                         .renderingMode(.template)
-                        .foregroundColor(._yellow)
+                        .foregroundColor(.BB_PrimaryUI)
                         .aspectRatio(contentMode: .fill)
                         .frame(width: widthScreen / 2)
                         .frame(height: widthScreen / 2)
@@ -32,7 +32,7 @@ struct SplashView: View {
                         .progressViewStyle(CircularProgressViewStyle(tint: .white))
                         .scaleEffect(1.5)
                     Spacer()
-                    Text("\($vm.versionApp.wrappedValue)")
+                    Text("\($vm.infoApp.wrappedValue)")
                         .foregroundStyle(.white.opacity(0.3))
                         .multilineTextAlignment(.center)
                         .font(.custom_(.rootUI_Bold, size: 14))
@@ -46,75 +46,4 @@ struct SplashView: View {
             }
         }
     }
-}
-
-
-class ViewModelSplashView: ObservableObject {
-    
-    @Published var showEnterCodeTenant = false
-    @Published var authIsCompleted = false
-    @Published var versionApp = ""
-    
-    func getVersionApp() {
-        
-//        LocalServices.clearLocalStorage()
-        
-        if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] {
-            self.versionApp = "\(version)"
-        }
-        //
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            // проверка авторизации
-            if Auth.checkAuth() == false {
-                self.showEnterCodeTenant = true
-            } else {
-                self.authIsCompleted = true
-                self.getStartData()
-            }
-        }
-    }
-    
-    private func getStartData() {
-        print("getStartData")
-        Task(priority: .userInitiated) {
-            await getColorShemeTenant()
-            await getLanguageDictionary()
-            await getUserData()
-        }
-        print("finish load getStartData")
-    }
-    
-    private func getColorShemeTenant() async {
-        print("getColorShemeTenant")
-        let json = await NetworkServices.shared.getColorShemeTenant()
-        print(json)
-    }
-    
-    private func getLanguageDictionary() async {
-//        let link = Endpoint.path(.getLanguageDictionary)
-//        gDict = await API.shared._request(link, checkError: false) ?? JSON()
-//        print("gDict: \(gDict)")
-//        DictionaryCustom.setAppLanguage()
-    }
-    
-    private func getUserData() async {
-//        let link = Endpoint.path(.getUserData)
-//        let json = await API.shared._request(link)
-//        if let json = json {
-//            if json["detail"].stringValue == "Учетные данные не были предоставлены." {
-//                auth()
-//            } else {
-//                Parse.parsePlayer(json: json) { user in
-//                    gCurrentUserData = user
-//                    gCurrentUserData.state = .ready
-//                    print("playerID: \(gCurrentUserData.id)")
-//                    print("roles: \(gCurrentUserData.roles)")
-//                }
-//                DispatchQueue.main.async {
-//                    GlobalSocket.shared.connect()
-//                }
-//            }
-//        }
-    }
-    
 }

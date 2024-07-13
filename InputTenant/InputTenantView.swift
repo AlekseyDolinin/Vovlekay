@@ -20,7 +20,7 @@ struct InputTenantView: View {
                         Spacer(minLength: 100)
                         Image("logo_frame")
                             .renderingMode(.template)
-                            .foregroundColor(._yellow)
+                            .foregroundColor(.BB_PrimaryUI)
                             .aspectRatio(contentMode: .fill)
                             .frame(width: widthScreen / 4)
                             .frame(height: widthScreen / 4)
@@ -50,7 +50,7 @@ struct InputTenantView: View {
                                 .font(.custom_(.rootUI_Medium, size: 18))
                                 .frame(height: 48)
                                 .frame(width: widthScreen - 48)
-                                .background(Color._yellow.opacity(vm.codeTenant.isEmpty ? 0.2 : 1.0))
+                                .background(Color.BB_PrimaryUI.opacity(vm.codeTenant.isEmpty ? 0.2 : 1.0))
                                 .cornerRadius(8)
                         }
                         Spacer(minLength: 48)

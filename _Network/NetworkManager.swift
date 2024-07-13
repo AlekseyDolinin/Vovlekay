@@ -21,14 +21,13 @@ class NetworkManager {
     
     private func _request(_ link: String,
                          method: HTTPMethod = .get,
-                         parameters: Any? = nil,
-                         needCookie: Bool = true) async -> Response_ {
+                         parameters: Any? = nil) async -> Response_ {
         guard let url = URL(string: link.lowercased()) else {
             print("BAD LINK: \(link)")
             return (nil, nil, nil)
         }
         var request = URLRequest(url: url)
-        if needCookie { setCookieInRequest(&request) }
+        setCookieInRequest(&request)
         request.httpMethod = method.rawValue
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
@@ -52,9 +51,11 @@ class NetworkManager {
     
     public func setCookieInRequest(_ request_: inout URLRequest) {
         let cookie = LocalServices.getCookie()
-        let languageString: String = AppLanguage.language.rawValue
-        let cookies_header = "\(cookie.name)=\(cookie.value); " + "language=\(languageString);"
-        request_.setValue(cookies_header, forHTTPHeaderField: "Cookie")
+        if let name = cookie.name, let value = cookie.value {
+            let languageString: String = AppLanguage.language.rawValue
+            let cookies_header = "\(name)=\(value); " + "language=\(languageString);"
+            request_.setValue(cookies_header, forHTTPHeaderField: "Cookie")
+        }
     }
     
     
