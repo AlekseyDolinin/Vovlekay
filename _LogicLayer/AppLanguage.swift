@@ -2,7 +2,7 @@ import Foundation
 import SwiftUI
 
 class AppLanguage {
-    
+        
     enum Language: String {
         case ru = "ru-RU"
         case en = "en-US"

@@ -3,12 +3,10 @@ import Foundation
 class SplashViewModel: ObservableObject {
     
     @Published var showEnterCodeTenant = false
-    @Published var authIsCompleted = false
     @Published var infoApp = ""
-    @Published var authIsSucces = false
+    @Published var showHomeView = false
     
     func getVersionApp() {
-                
         if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] {
             DispatchQueue.main.async {
                 self.infoApp = "\(version)"
@@ -31,9 +29,18 @@ class SplashViewModel: ObservableObject {
             await getColorShemeTenant()
             await getLanguageDictionary()
             await getUserData()
+            
             print("finish load getStartData")
-            DispatchQueue.main.async {
-                self.authIsCompleted = true
+            print(AppTheme.colors != nil)
+            print(LocalServices.localStorage._languageDictionary != nil)
+            print(LocalServices.localStorage._userData != nil)
+            
+            if AppTheme.colors != nil
+                && LocalServices.localStorage._languageDictionary != nil
+                && LocalServices.localStorage._userData != nil {
+                DispatchQueue.main.async {
+                    self.showHomeView = true
+                }
             }
         }
     }
@@ -53,16 +60,19 @@ class SplashViewModel: ObservableObject {
             self.infoApp = "Set dictionary"
         }
         let json = await NetworkServices.shared.getLanguageDictionary()
+        if let json = json {
+            LocalServices.localStorage._languageDictionary = json
+        }
     }
     
     private func getUserData() async {
-        print("getUserData")
         DispatchQueue.main.async {
             self.infoApp = "Get user data"
         }
         let json = await NetworkServices.shared.getUserData()
-        print("json: \(json)")
-
+        if let json = json {
+            LocalServices.localStorage._userData = json
+        }
     }
     
 }

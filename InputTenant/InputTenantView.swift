@@ -130,9 +130,6 @@ struct InputTenantView: View {
                     .background(Color.black)
                     .ignoresSafeArea()
             }
-            .navigationDestination(isPresented: $vm.authIsSucces_) {
-                Home()
-            }
         }
     }
 }

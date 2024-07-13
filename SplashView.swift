@@ -5,16 +5,22 @@ import SwiftUI
 struct SplashView: View {
     
     @StateObject private var vm = SplashViewModel()
+    @StateObject private var inputTenantViewModel = InputTenantViewModel()
     
     let widthScreen = UIScreen.main.bounds.width
     
     var body: some View {
+
         NavigationStack {
             ZStack {
                 Color.black
                     .ignoresSafeArea()
                     .onAppear {
                         vm.getVersionApp()
+                        if inputTenantViewModel.authIsSucces_ == true {
+                            print("!!!!!!!!!")
+//                            vm.getVersionApp()
+                        }
                     }
                 VStack {
                     Spacer()
@@ -38,11 +44,14 @@ struct SplashView: View {
                 }
             }
             .navigationDestination(isPresented: $vm.showEnterCodeTenant) {
-                InputTenantView()
+                InputTenantView(vm: inputTenantViewModel)
             }
-            .navigationDestination(isPresented: $vm.authIsCompleted) {
-                Home()
+            .navigationDestination(isPresented: $vm.showHomeView) {
+                HomeView()
             }
+//            .navigationDestination(isPresented: $inputTenantViewModel.authIsSucces_) {
+//                HomeView2()
+//            }
         }
     }
 }

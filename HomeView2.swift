@@ -1,19 +1,18 @@
-#Preview { Home() }
+#Preview { HomeView2() }
 
 import SwiftUI
 
-struct Home: View {
+struct HomeView2: View {
         
-    @StateObject var vm = HomeViewModel()
+    @StateObject var vm = HomeView2Model()
     
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.BB_RedUI
+                Color.yellow
                     .ignoresSafeArea()
                     .navigationBarBackButtonHidden()
-
-                Button("logout") {
+                Button("------") {
                     vm.logout()
                 }
             }
@@ -22,7 +21,7 @@ struct Home: View {
 }
 
 
-class HomeViewModel: ObservableObject {
+class HomeView2Model: ObservableObject {
     
     func logout() {
         print("logout")

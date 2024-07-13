@@ -15,7 +15,6 @@ public class AppTheme {
     
     //
     public static func createTheme(json: JSON) {
-        print("createTheme")
         AppTheme.customAuthLogoLink = json["custom_auth_logo"].stringValue
         AppTheme.colors = json["colors"]
         AppTheme.basicTheme = json["basic_theme"].stringValue
