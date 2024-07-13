@@ -56,6 +56,9 @@ class ViewModelSplashView: ObservableObject {
     @Published var versionApp = ""
     
     func getVersionApp() {
+        
+//        LocalServices.clearLocalStorage()
+        
         if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] {
             self.versionApp = "\(version)"
         }

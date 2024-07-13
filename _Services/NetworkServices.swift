@@ -1,8 +1,4 @@
-import Foundation
-import SwiftUI
-import Combine
-
-final class NetworkServices: ObservableObject {
+final class NetworkServices {
                 
     static let shared = NetworkServices()
     
@@ -20,7 +16,6 @@ final class NetworkServices: ObservableObject {
     
     func getColorShemeTenant() async -> JSON? {
         let link = Endpoint.path(.getColorShemeTenant)
-        print("link: \(link)")
         return await networkManager.getJSON(link: link)
     }
     

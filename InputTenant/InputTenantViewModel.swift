@@ -11,7 +11,9 @@ class InputTenantViewModel: ObservableObject {
     var textError: String = ""
     
     func changeLanguage(language: AppLanguage.Language) {
-        self.language = AppLanguage.changeLanguage(language: language)
+        DispatchQueue.main.async {
+            self.language = AppLanguage.changeLanguage(language: language)
+        }
     }
     
     func sendCode() {
@@ -32,10 +34,9 @@ class InputTenantViewModel: ObservableObject {
                 } else {
                     // сохранение кода тенанта и host
                     // кода тенанта сохраняется для отображения в меню
-                    do {
-                        try LocalStorage.keychain.set(codeTenant, key: String._codeTenant)
-                        try LocalStorage.keychain.set(json!["domain"].stringValue, key: String._hostname)
-                    }
+                    print("сохранение кода тенанта и host")
+                    LocalServices.saveInKeychain(value: codeTenant, key: ._codeTenant)
+                    LocalServices.saveInKeychain(value: json!["domain"].stringValue, key: ._hostname)
                     Endpoint.hostname = json!["domain"].stringValue
                     getOptionsTenant()
                 }
@@ -45,10 +46,10 @@ class InputTenantViewModel: ObservableObject {
     
     private func getOptionsTenant() {
         Task(priority: .userInitiated) {
-            LocalStorage.Parameters._optionsTenant = await networkServices.getOptionsTenant()
-            if LocalStorage.Parameters._optionsTenant != nil {
+            let json = await networkServices.getOptionsTenant()
+            if json != nil {
+                LocalServices.saveOptionsTenant(json: json)
                 DispatchQueue.main.async {
-                    self.codeTenant = ""
                     self.showAuhtView = true
                 }
             }

@@ -33,7 +33,8 @@ class Endpoint {
             return url_ + "/api/options/"
             
         case .linkAuth:
-            switch LocalStorage.Parameters._optionsTenant?["oauth2_custom"].string {
+            
+            switch LocalServices.localStorage._optionsTenant?["oauth2_custom"].string {
             case "t1":
                 return "https://tinkoff.boxbattle.ru/"
             case "rg":

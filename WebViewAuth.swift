@@ -69,9 +69,25 @@ class AuthWebVC: UIViewController, ObservableObject {
         webViewURLObserver = basicWebView.observe(\.url, options: .new) { webView, change in
             guard let newValueUrl = change.newValue else { return }
             if newValueUrl?.lastPathComponent == "home" {
-                LocalStorage.Cookies.saveCookie(webView: self.basicWebView)
+                self.getCookiesFromWebview()
                 self.dismiss(animated: true) {
                     self.delegate?.authIsSucces(true)
+                }
+            }
+        }
+    }
+    
+    private func getCookiesFromWebview() {
+        basicWebView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
+            for cookie in cookies {
+                if cookie.name == "user_id" && cookie.domain == Endpoint.hostname {
+                    var cookieDict = [String : AnyObject]()
+                    cookieDict[cookie.name] = cookie.properties as AnyObject?
+                    guard let dictionary = cookieDict["user_id"] as? Dictionary<String, Any> else { return }
+                    let name: String = dictionary["Name"] as! String
+                    let value: String = dictionary["Value"] as! String
+                    LocalServices.saveInKeychain(value: name, key: ._cookieName)
+                    LocalServices.saveInKeychain(value: value, key: ._cookieValue)
                 }
             }
         }
@@ -142,7 +158,7 @@ extension WKWebView {
 
     func cleanAllCookies() {
         HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
-        print("All cookies deleted")
+        print("All cookies in webview clear")
 
         WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
             records.forEach { record in
