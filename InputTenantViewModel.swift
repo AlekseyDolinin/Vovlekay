@@ -30,9 +30,12 @@ class InputTenantViewModel: ObservableObject {
                         self.showAlert = true
                     }
                 } else {
-                    // сохранение кода тенанта для отображения в меню
-                    UserDefaults.standard.set(codeTenant, forKey: .codeTenant)
-                    UserDefaults.standard.set(json!["domain"].string, forKey: .hostname)
+                    // сохранение кода тенанта и host
+                    // кода тенанта сохраняется для отображения в меню
+                    do {
+                        try LocalStorage.keychain.set(codeTenant, key: String._codeTenant)
+                        try LocalStorage.keychain.set(json!["domain"].stringValue, key: String._hostname)
+                    }
                     Endpoint.hostname = json!["domain"].stringValue
                     getOptionsTenant()
                 }
@@ -42,8 +45,8 @@ class InputTenantViewModel: ObservableObject {
     
     private func getOptionsTenant() {
         Task(priority: .userInitiated) {
-            LocalStorage.Parameters.optionsTenant = await networkServices.getOptionsTenant()
-            if LocalStorage.Parameters.optionsTenant != nil {
+            LocalStorage.Parameters._optionsTenant = await networkServices.getOptionsTenant()
+            if LocalStorage.Parameters._optionsTenant != nil {
                 DispatchQueue.main.async {
                     self.codeTenant = ""
                     self.showAuhtView = true

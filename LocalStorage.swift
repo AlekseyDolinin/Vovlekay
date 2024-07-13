@@ -4,14 +4,17 @@ import Foundation
 
 class LocalStorage {
 
-    static let keychain = Keychain(service: "vovlekay")
+    static let keychain = Keychain(service: String._keychainName)
     
     
     class Parameters {
         static let shared = LocalStorage()
         
-        static var optionsTenant: JSON?
-        static let cookie = Keychain(service: "vovlekay")
+        static var _optionsTenant: JSON?
+        static var _languageDictionary: JSON?
+        static var _userData: JSON?
+        
+        static let cookie = Keychain(service: String._keychainName)
     }
 }
 
@@ -33,8 +36,8 @@ extension LocalStorage {
                         let value: String = dictionary["Value"] as! String
                         
                         do {
-                            try LocalStorage.keychain.set(name, key: "name")
-                            try keychain.set(value, key: "value")
+                            try LocalStorage.keychain.set(name, key: String._cookieName)
+                            try keychain.set(value, key: String._cookieValue)
                         }
                         catch let error {
                             print(error)
@@ -47,8 +50,8 @@ extension LocalStorage {
         // removeCookiesFromKeychain
         class func removeCookiesFromKeychain() {
             do {
-                try LocalStorage.keychain.remove("name")
-                try LocalStorage.keychain.remove("value")
+                try LocalStorage.keychain.remove(String._cookieName)
+                try LocalStorage.keychain.remove(String._cookieValue)
                 print("Cookies in Keychain is clear")
             } catch let error {
                 print("error remove keychain: \(error)")

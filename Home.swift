@@ -14,3 +14,8 @@ struct Home: View {
         }
     }
 }
+
+
+class ViewModelHome: ObservableObject {
+    
+}

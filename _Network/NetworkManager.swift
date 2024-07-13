@@ -51,8 +51,8 @@ class NetworkManager {
     
     
     public func setCookieInRequest(_ request_: inout URLRequest) {
-        let name: String = LocalStorage.keychain["name"] ?? ""
-        let value: String = LocalStorage.keychain["value"] ?? ""
+        let name: String = LocalStorage.keychain[String._cookieName] ?? ""
+        let value: String = LocalStorage.keychain[String._cookieValue] ?? ""
         let languageString: String = AppLanguage.language.rawValue
         let cookies_header = "\(name)=\(value); " + "language=\(languageString);"
         request_.setValue(cookies_header, forHTTPHeaderField: "Cookie")
