@@ -4,8 +4,7 @@ import SwiftUI
 
 struct SplashView: View {
     
-    @StateObject var vm = SplashViewModel()
-    @State private var authIsSucces = false
+    @StateObject private var vm = SplashViewModel()
     
     let widthScreen = UIScreen.main.bounds.width
     

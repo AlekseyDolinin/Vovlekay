@@ -5,7 +5,6 @@ import SwiftUI
 struct InputTenantView: View {
     
     @StateObject var vm = InputTenantViewModel()
-    @State var authIsSucces = false
     
     private let widthScreen = UIScreen.main.bounds.width
     
@@ -127,11 +126,11 @@ struct InputTenantView: View {
                 Button("OK", role: .cancel) { }
             }
             .sheet(isPresented: $vm.showAuhtView) {
-                NavigationView { WebViewAuth(authIsSucces: $authIsSucces) }
+                NavigationView { WebViewAuth(authIsSucces: $vm.authIsSucces_) }
                     .background(Color.black)
                     .ignoresSafeArea()
             }
-            .navigationDestination(isPresented: $authIsSucces) {
+            .navigationDestination(isPresented: $vm.authIsSucces_) {
                 Home()
             }
         }

@@ -5,11 +5,10 @@ class SplashViewModel: ObservableObject {
     @Published var showEnterCodeTenant = false
     @Published var authIsCompleted = false
     @Published var infoApp = ""
+    @Published var authIsSucces = false
     
     func getVersionApp() {
-        
-//        LocalServices.clearLocalStorage()
-        
+                
         if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] {
             DispatchQueue.main.async {
                 self.infoApp = "\(version)"

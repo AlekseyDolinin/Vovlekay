@@ -58,7 +58,7 @@ class AuthWebVC: UIViewController, ObservableObject {
         webConfiguration.preferences.javaScriptCanOpenWindowsAutomatically = true
         webConfiguration.applicationNameForUserAgent = "Version/8.0.2 Safari/600.2.5"
         basicWebView = WKWebView(frame: .zero, configuration: webConfiguration)
-        basicWebView.cleanAllCookies()
+//        basicWebView.cleanAllCookiesInWebviewAuth()
         basicWebView.uiDelegate = self
         createWebView()
         //
@@ -70,10 +70,14 @@ class AuthWebVC: UIViewController, ObservableObject {
             guard let newValueUrl = change.newValue else { return }
             if newValueUrl?.lastPathComponent == "home" {
                 self.getCookiesFromWebview()
-                self.dismiss(animated: true) {
-                    self.delegate?.authIsSucces(true)
-                }
+                self.hideModalAuth()
             }
+        }
+    }
+    
+    private func hideModalAuth() {
+        self.dismiss(animated: true) {
+            self.delegate?.authIsSucces(true)
         }
     }
     
@@ -154,7 +158,7 @@ extension AuthWebVC: MFMailComposeViewControllerDelegate {
 
 extension WKWebView {
 
-    func cleanAllCookies() {
+    func cleanAllCookiesInWebviewAuth() {
         HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
         print("All cookies in webview clear")
 
