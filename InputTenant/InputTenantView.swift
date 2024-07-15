@@ -126,10 +126,10 @@ struct InputTenantView: View {
                 Button("OK", role: .cancel) { }
             }
             .sheet(isPresented: $vm.showAuhtView) {
-                NavigationView { WebViewAuth(authIsSucces: $vm.authIsSucces_) }
+                NavigationView { WebViewAuth() }
                     .background(Color.black)
                     .ignoresSafeArea()
-            }
+            }            
         }
     }
 }

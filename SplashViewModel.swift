@@ -6,6 +6,23 @@ class SplashViewModel: ObservableObject {
     @Published var infoApp = ""
     @Published var showHomeView = false
     
+    init() {
+        NotificationCenter.default.addObserver(self, 
+                                               selector: #selector(self.getStartDataAfterAuth),
+                                               name: Notification.Name("authIsSucces"),
+                                               object: nil)
+    }
+    
+    @objc func getStartDataAfterAuth() {
+        DispatchQueue.main.async {
+            self.showEnterCodeTenant = false
+            self.getStartData()
+        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.getStartData()
+//        }
+    }
+    
     func getVersionApp() {
         if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] {
             DispatchQueue.main.async {

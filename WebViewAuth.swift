@@ -6,46 +6,18 @@ import UIKit
 import MessageUI
 
 struct WebViewAuth: UIViewControllerRepresentable {
-
-    var authIsSucces: Binding<Bool>
-    
+        
     func makeUIViewController(context: Context) -> AuthWebVC {
-        let vc = AuthWebVC()
-        vc.delegate = context.coordinator
-        return vc
+        return AuthWebVC()
     }
 
     func updateUIViewController(_ uiViewController: AuthWebVC, context: Context) { }
-    
-    func makeCoordinator() -> Coordinator {
-        return Coordinator(authIsSucces: authIsSucces)
-    }
 }
 
-
-class Coordinator: AuthWebVCDelegate {
-
-    let authIsSucces: Binding<Bool>
-    
-    init(authIsSucces: Binding<Bool>) {
-        self.authIsSucces = authIsSucces
-    }
-    
-    func authIsSucces(_ result: Bool) {
-        authIsSucces.wrappedValue = result
-    }
-}
-
-
-protocol AuthWebVCDelegate: AnyObject {
-    func authIsSucces(_ result: Bool)
-}
 
 class AuthWebVC: UIViewController, ObservableObject {
                 
-    weak var delegate: AuthWebVCDelegate?
-    
-    var authIsSucces = false
+    static var shared = AuthWebVC()
     
     var basicWebView: WKWebView!
     var webViewURLObserver: NSKeyValueObservation?
@@ -70,14 +42,8 @@ class AuthWebVC: UIViewController, ObservableObject {
             guard let newValueUrl = change.newValue else { return }
             if newValueUrl?.lastPathComponent == "home" {
                 self.getCookiesFromWebview()
-                self.hideModalAuth()
+                NotificationCenter.default.post(name: Notification.Name("authIsSucces"), object: nil)
             }
-        }
-    }
-    
-    private func hideModalAuth() {
-        self.dismiss(animated: true) {
-            self.delegate?.authIsSucces(true)
         }
     }
     
@@ -158,7 +124,11 @@ extension AuthWebVC: MFMailComposeViewControllerDelegate {
 
 extension WKWebView {
 
-    func cleanAllCookiesInWebviewAuth() {
+    /// очистка всх Cookies в WebviewAuth
+    /// после очистки понадобится аовторная авторизация
+    /// если не очистить то при открытии WebviewAuth авторизация происходит автоматически
+    /// тк в WebviewAuth сразу редирект на главную страницу
+    private func cleanAllCookiesInWebviewAuth() {
         HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
         print("All cookies in webview clear")
 

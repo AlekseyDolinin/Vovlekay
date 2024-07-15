@@ -6,7 +6,6 @@ class InputTenantViewModel: ObservableObject {
     @Published var showAlert: Bool = false
     @Published var showAuhtView: Bool = false
     @Published var codeTenant: String = "test-1"
-    @Published var authIsSucces_ = false
     
     let networkServices = NetworkServices()
     var textError: String = ""
