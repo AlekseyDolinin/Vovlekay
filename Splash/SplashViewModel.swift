@@ -18,9 +18,6 @@ class SplashViewModel: ObservableObject {
             self.showEnterCodeTenant = false
             self.getStartData()
         }
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.getStartData()
-//        }
     }
     
     func getVersionApp() {
@@ -33,7 +30,9 @@ class SplashViewModel: ObservableObject {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             // проверка авторизации
             if Auth.checkAuth() == false {
-                self.showEnterCodeTenant = true
+                DispatchQueue.main.async {
+                    self.showEnterCodeTenant = true
+                }
             } else {
                 self.getStartData()
             }
@@ -46,15 +45,14 @@ class SplashViewModel: ObservableObject {
             await getColorShemeTenant()
             await getLanguageDictionary()
             await getUserData()
-            
+            await getGuides()
+            await getGameCurrencies()
+            await connectGlobalSocket()
             print("finish load getStartData")
-            print(AppTheme.colors != nil)
-            print(LocalServices.localStorage._languageDictionary != nil)
-            print(LocalServices.localStorage._userData != nil)
+
+//            self.showHomeView = true
             
-            if AppTheme.colors != nil
-                && LocalServices.localStorage._languageDictionary != nil
-                && LocalServices.localStorage._userData != nil {
+            if LocalServices.localStorage._userData != nil {
                 DispatchQueue.main.async {
                     self.showHomeView = true
                 }
@@ -62,26 +60,34 @@ class SplashViewModel: ObservableObject {
         }
     }
     
+    /// получение  базовах цаетов
+    /// полная настройка цветоаой схемы в AppTheme.createTheme
     private func getColorShemeTenant() async {
         DispatchQueue.main.async {
             self.infoApp = "Set color theme"
         }
         let json = await NetworkServices.shared.getColorShemeTenant()
+//        print(json)
         if let json = json {
             AppTheme.createTheme(json: json)
         }
     }
     
+    /// получение  словаря
+    /// хранится в LocalServices.localStorage._languageDictionary в JSON
     private func getLanguageDictionary() async {
         DispatchQueue.main.async {
             self.infoApp = "Set dictionary"
         }
         let json = await NetworkServices.shared.getLanguageDictionary()
+//        print(json)
         if let json = json {
             LocalServices.localStorage._languageDictionary = json
         }
     }
     
+    /// получение  данных по пользователю
+    /// хранится в LocalServices.localStorage._userData в JSON
     private func getUserData() async {
         DispatchQueue.main.async {
             self.infoApp = "Get user data"
@@ -92,4 +98,36 @@ class SplashViewModel: ObservableObject {
         }
     }
     
+    private func getGuides() async {
+        DispatchQueue.main.async {
+            self.infoApp = "Get game guides"
+        }
+        let json = await NetworkServices.shared.getGuides()
+        if let json = json {
+
+        }
+    }
+    
+    /// получение  всех валют тенанта
+    /// хранится в LocalStorage.shared._currencie в [Currency]
+    private func getGameCurrencies() async {
+        DispatchQueue.main.async {
+            self.infoApp = "Get game currencies"
+        }
+        let json = await NetworkServices.shared.getGameCurrencies()
+        if let json = json {
+            for i in json.arrayValue {
+                let currency = Currency()
+                await currency.parse(json: i)
+                LocalStorage.shared._currencies?.append(currency)
+            }
+        }
+    }
+    
+    private func connectGlobalSocket() async {
+        DispatchQueue.main.async {
+            self.infoApp = "Socket connect"
+        }
+//        GlobalSocket.shared.connect()
+    }
 }

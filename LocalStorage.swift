@@ -11,6 +11,7 @@ class LocalStorage {
     var _optionsTenant: JSON?
     var _languageDictionary: JSON?
     var _userData: JSON?
+    var _currencies: [Currency]?
     
     class func saveValue(value: String, key: KeyskKeychain) {
         print("saveValue in keychain: \(value)")

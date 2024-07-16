@@ -14,6 +14,9 @@ class Endpoint {
         case getColorShemeTenant
         case getLanguageDictionary
         case getUserData
+        case getGameCurrencies
+        case getGuides
+        
         
     }
     
@@ -52,6 +55,11 @@ class Endpoint {
         case .getUserData:
             return url_ + "/api/get_user_data/"
             
+        case .getGameCurrencies:
+            return url_ + "/game/api/v4/currencies/"
+            
+        case .getGuides:
+            return url_ + "/game/api/v4/guides/"
             
             
             

@@ -29,4 +29,13 @@ final class NetworkServices {
         return await networkManager.getJSON(link: link)
     }
     
+    func getGameCurrencies() async -> JSON? {
+        let link = Endpoint.path(.getGameCurrencies)
+        return await networkManager.getJSON(link: link)
+    }
+    
+    func getGuides() async -> JSON? {
+        let link = Endpoint.path(.getGuides)
+        return await networkManager.getJSON(link: link)
+    }
 }

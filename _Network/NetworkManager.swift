@@ -4,12 +4,19 @@ typealias Response_ = (data_: Data?, response_: URLResponse?, error_: Error?)
 
 class NetworkManager {
         
+    static let shared = NetworkManager()
+    
     func getJSON(link: String, loader: Bool = true, checkError: Bool = true) async -> JSON? {
         let dataResponse: Response_ = await _request(link)
         if dataResponse.error_ != nil { ErrorParser.shared.parse(input: dataResponse) }
         if let data = dataResponse.data_ {
             let json = JSON(data)
-            return json
+            if let _ = json["detail"].string {
+                ErrorParser.shared.parse(input: dataResponse)
+                return nil
+            } else {
+                return json
+            }
         } else {
             if let httpResponse = dataResponse.response_ as? HTTPURLResponse {
                 print("statusCode: \(httpResponse.statusCode)")
@@ -48,12 +55,14 @@ class NetworkManager {
         }
     }
     
-    
-    public func setCookieInRequest(_ request_: inout URLRequest) {
+    private func setCookieInRequest(_ request_: inout URLRequest) {
         let cookie = LocalServices.getCookie()
         if let name = cookie.name, let value = cookie.value {
             let languageString: String = AppLanguage.language.rawValue
             let cookies_header = "\(name)=\(value); " + "language=\(languageString);"
+            
+            print(cookies_header)
+            
             request_.setValue(cookies_header, forHTTPHeaderField: "Cookie")
         }
     }
