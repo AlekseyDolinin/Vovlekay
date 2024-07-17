@@ -55,16 +55,21 @@ class NetworkManager {
         }
     }
     
-    private func setCookieInRequest(_ request_: inout URLRequest) {
-        let cookie = LocalServices.getCookie()
-        if let name = cookie.name, let value = cookie.value {
-            let languageString: String = AppLanguage.language.rawValue
-            let cookies_header = "\(name)=\(value); " + "language=\(languageString);"
-            
-            print(cookies_header)
-            
-            request_.setValue(cookies_header, forHTTPHeaderField: "Cookie")
-        }
+    public func setCookieInRequest(_ request_: inout URLRequest) {
+        // UserDefaults
+        guard let savedCookie = UserDefaults.standard.dictionary(forKey: "cookies") else { return }
+        guard let dictionary = savedCookie["user_id"] as? Dictionary<String, Any> else { return }
+        guard let value: String = dictionary["Value"] as? String else { return }
+        guard let name: String = dictionary["Name"] as? String else { return }
+        let cookies_header = "\(name)=\(value); " + "language=\(AppLanguage.language.rawValue);"
+        request_.setValue(cookies_header, forHTTPHeaderField: "Cookie")
+        
+//        // keychain
+//        let cookie = LocalServices.getCookie()
+//        if let name = cookie.name, let value = cookie.value {
+//            let cookies_header = "\(name)=\(value); " + "language=\(AppLanguage.language.rawValue);"
+//            request_.setValue(cookies_header, forHTTPHeaderField: "Cookie")
+//        }
     }
     
     

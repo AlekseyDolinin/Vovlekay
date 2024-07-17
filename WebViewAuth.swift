@@ -58,6 +58,9 @@ class AuthWebVC: UIViewController, ObservableObject {
                     let value: String = dictionary["Value"] as! String
                     LocalServices.saveInKeychain(value: name, key: ._cookieName)
                     LocalServices.saveInKeychain(value: value, key: ._cookieValue)
+                    
+                    // save cookies
+                    UserDefaults.standard.set(cookieDict, forKey: "cookies")
                 }
             }
         }

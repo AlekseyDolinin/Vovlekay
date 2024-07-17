@@ -14,10 +14,8 @@ class LocalStorage {
     var _currencies: [Currency]?
     
     class func saveValue(value: String, key: KeyskKeychain) {
-        print("saveValue in keychain: \(value)")
         do {
             try LocalStorage.shared.keychain.set(value, key: key.rawValue)
-            print("save in keychain succes")
         }
         catch let error {
             print(error)

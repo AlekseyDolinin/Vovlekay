@@ -128,6 +128,6 @@ class SplashViewModel: ObservableObject {
         DispatchQueue.main.async {
             self.infoApp = "Socket connect"
         }
-//        GlobalSocket.shared.connect()
+        GlobalSocket.shared.connect()
     }
 }
