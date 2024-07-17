@@ -70,7 +70,7 @@ public extension Color {
     static var BB_PrimaryUI = Color(#colorLiteral(red: 0.9607843137, green: 0.9058823529, blue: 0.431372549, alpha: 1))
 //    static var BB_SecondaryUI = UIColor()
 //    
-//    static var BB_TextUI = UIColor()
+    static var BB_TextUI: Color!
 //    static var BB_TextOnPrimary = UIColor()
     static var BB_RedUI: Color!
 //    static var BB_GreenUI = UIColor()
@@ -91,7 +91,7 @@ public extension Color {
 //
 //    static var BB_TextPrimary = UIColor()
 //    static var BB_TextSecondary = UIColor()
-//    static var BB_TextHigh = UIColor()
+    static var BB_TextHigh: Color!
 //    static var BB_TextMedium = UIColor()
 //    static var BB_TextDisabled = UIColor()
 //    static var BB_TextOnPrimaryHigh = UIColor()

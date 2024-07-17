@@ -19,11 +19,11 @@ public class AppTheme {
         AppTheme.colors = json["colors"]
         AppTheme.basicTheme = json["basic_theme"].stringValue
         // basic
-//        UIColor.BB_BGPrimary = UIColor.hexStringToUIColor(hex: colors["BGPrimary"].stringValue)
+        Color.BB_BGPrimary = Color.init(hex: colors["BGPrimary"].stringValue)            
         Color.BB_PrimaryUI = Color.init(hex: colors["TextUI2"].stringValue)
 
 //        UIColor.BB_SecondaryUI = UIColor.hexStringToUIColor(hex: colors["TextUI1"].stringValue)
-//        UIColor.BB_TextUI = UIColor.hexStringToUIColor(hex: colors["TextPrimary"].stringValue)
+        Color.BB_TextUI = Color.init(hex: colors["TextPrimary"].stringValue)
 //        UIColor.BB_TextOnPrimary = UIColor.hexStringToUIColor(hex: colors["TextUIButtonChange"].stringValue)
         
         Color.BB_RedUI = Color.init(hex: colors["FixedUIRed"].stringValue)
@@ -49,7 +49,7 @@ public class AppTheme {
         // Text_ui
 //        UIColor.BB_TextPrimary = createBB_TextPrimary()
 //        UIColor.BB_TextSecondary = createBB_TextSecondary()
-//        UIColor.BB_TextHigh = createBB_TextHigh()
+        Color.BB_TextHigh = createBB_TextHigh()
 //        UIColor.BB_TextMedium = createBB_TextMedium()
 //        UIColor.BB_TextDisabled = createBB_TextDisabled()
 //        UIColor.BB_TextOnPrimaryHigh = createBB_TextOnPrimaryHigh()
@@ -168,13 +168,13 @@ public class AppTheme {
 //        }
 //    }
     
-//    private static func createBB_TextHigh() -> UIColor {
-//        if AppTheme.basicTheme == "dark" {
-//            return .BB_TextUI
-//        } else {
-//            return .BB_TextUI
-//        }
-//    }
+    private static func createBB_TextHigh() -> Color {
+        if AppTheme.basicTheme == "dark" {
+            return .BB_TextUI
+        } else {
+            return .BB_TextUI
+        }
+    }
 //    
 //    private class func createBB_TextMedium() -> UIColor {
 //        if AppTheme.basicTheme == "dark" {
