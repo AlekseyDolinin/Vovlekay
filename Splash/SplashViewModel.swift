@@ -4,7 +4,7 @@ class SplashViewModel: ObservableObject {
     
     @Published var showEnterCodeTenant = false
     @Published var infoApp = ""
-    @Published var showHomeView = false
+    @Published var goToGame = false
     
     init() {
         NotificationCenter.default.addObserver(self, 
@@ -49,12 +49,10 @@ class SplashViewModel: ObservableObject {
             await getGameCurrencies()
             await connectGlobalSocket()
             print("finish load getStartData")
-
-//            self.showHomeView = true
             
             if LocalServices.localStorage._userData != nil {
                 DispatchQueue.main.async {
-                    self.showHomeView = true
+                    self.goToGame = true
                 }
             }
         }

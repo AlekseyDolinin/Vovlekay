@@ -13,19 +13,17 @@ class GlobalSocket: NSObject {
     
     weak var delegate: GlobalSocketDelegate?
     
-    public var jsonData: JSON!
-        
+    var jsonData: JSON!
     
-    func reconectGlobalSocket() {
-        if session == nil { return }
-        if webSocketTask.state == .completed {
-            connect()
-        }
-    }
+//    func reconectGlobalSocket() {
+//        if session == nil { return }
+//        if webSocketTask.state == .completed {
+//            connect()
+//        }
+//    }
     
     func connect() {
         session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
-        
         guard let url = URL(string: "wss://box-test.boxbattle.ru/ws/") else {
             print("error url GlobalSocket")
             return
@@ -33,6 +31,7 @@ class GlobalSocket: NSObject {
         var request = URLRequest(url: url)
         NetworkServices.shared.networkManager.setCookieInRequest(&request)
         webSocketTask = session.webSocketTask(with: request)
+        print("stststs1: \(GlobalSocket.shared.webSocketTask.state)")
         webSocketTask.resume()
     }
     
@@ -45,7 +44,7 @@ class GlobalSocket: NSObject {
         webSocketTask.receive { result in
             switch result {
             case .failure(let error):
-                print("error1 connected webSocket: \(error)")
+                print("connected webSocket failure: \(error)")
             case .success(let message):
                 switch message {
                 case .string(let text):
@@ -57,7 +56,7 @@ class GlobalSocket: NSObject {
                             self.delegate?.receivedData()
                         }
                     } catch let error {
-                        print("error2 connected webSocket: \(error)")
+                        print("connected webSocket error: \(error)")
                     }
                 case .data(let data):
                     print("Received binary message: \(data)")
@@ -97,7 +96,6 @@ extension GlobalSocket: URLSessionWebSocketDelegate {
 //                appDelegate.goToGame()
 //            }
 //        }
-        
         connected()
     }
 

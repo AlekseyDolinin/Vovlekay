@@ -9,7 +9,6 @@ struct SplashView: View {
     let widthScreen = UIScreen.main.bounds.width
     
     var body: some View {
-
         NavigationStack {
             ZStack {
                 Color.black
@@ -41,8 +40,8 @@ struct SplashView: View {
             .fullScreenCover(isPresented: $vm.showEnterCodeTenant, content: {
                 InputTenantView()
             })
-            .navigationDestination(isPresented: $vm.showHomeView) {
-                HomeView()
+            .navigationDestination(isPresented: $vm.goToGame) {
+                HomeView(activateRootLink: $vm.goToGame)
             }
         }
     }

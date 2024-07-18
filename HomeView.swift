@@ -1,10 +1,11 @@
-#Preview { HomeView() }
+//#Preview { HomeView() }
 
 import SwiftUI
 
 struct HomeView: View {
     
     @StateObject var vm = HomeViewModel()
+    @Binding var activateRootLink: Bool
     
     var body: some View {
         NavigationStack {
@@ -12,6 +13,7 @@ struct HomeView: View {
                 Color.BB_BGPrimary
                     .ignoresSafeArea()
                 Button("logout") {
+                    activateRootLink = false
                     vm.logout()
                 }
             })

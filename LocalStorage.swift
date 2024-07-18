@@ -23,8 +23,11 @@ class LocalStorage {
     }
     
     class func clearAllLocalStorage() {
+        print("clearAllLocalStorage")
         LocalStorage.shared.clearKeychain()
         LocalStorage.shared.clearParameters()
+        LocalStorage.shared.clearUserDefaults()
+        LocalStorage.shared._userData = nil
     }
 }
 
@@ -51,5 +54,11 @@ extension LocalStorage {
         LocalStorage.shared._optionsTenant = nil
         LocalStorage.shared._languageDictionary = nil
         LocalStorage.shared._userData = nil
+    }
+    
+    // clearUserDefaults
+    private func clearUserDefaults() {
+        print("clearParameters")
+        UserDefaults.standard.removeObject(forKey: "cookies")
     }
 }

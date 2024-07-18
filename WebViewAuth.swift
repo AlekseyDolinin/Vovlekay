@@ -30,7 +30,7 @@ class AuthWebVC: UIViewController, ObservableObject {
         webConfiguration.preferences.javaScriptCanOpenWindowsAutomatically = true
         webConfiguration.applicationNameForUserAgent = "Version/8.0.2 Safari/600.2.5"
         basicWebView = WKWebView(frame: .zero, configuration: webConfiguration)
-//        basicWebView.cleanAllCookiesInWebviewAuth()
+        basicWebView.cleanAllCookiesInWebviewAuth()
         basicWebView.uiDelegate = self
         createWebView()
         //
@@ -131,7 +131,7 @@ extension WKWebView {
     /// после очистки понадобится аовторная авторизация
     /// если не очистить то при открытии WebviewAuth авторизация происходит автоматически
     /// тк в WebviewAuth сразу редирект на главную страницу
-    private func cleanAllCookiesInWebviewAuth() {
+    func cleanAllCookiesInWebviewAuth() {
         HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
         print("All cookies in webview clear")
 
@@ -141,9 +141,5 @@ extension WKWebView {
                 print("Cookie ::: \(record) deleted")
             }
         }
-    }
-
-    func refreshCookies() {
-        self.configuration.processPool = WKProcessPool()
     }
 }
