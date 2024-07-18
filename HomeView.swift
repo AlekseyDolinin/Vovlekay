@@ -32,6 +32,7 @@ class HomeViewModel: ObservableObject {
 
 
 struct NavigationViewBB<Content>: View where Content: View {
+    
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
 
     let content: Content
@@ -41,11 +42,10 @@ struct NavigationViewBB<Content>: View where Content: View {
             VStack {
                 NavBarBB(backHandler: {
                     self.presentationMode.wrappedValue.dismiss()
-                }, title: "")
+                })
                 content
             }
         }
-        .navigationBarTitle("")
         .navigationBarHidden(true)
     }
 }
@@ -53,9 +53,9 @@ struct NavigationViewBB<Content>: View where Content: View {
 
 
 struct NavBarBB: View {
+    
     let backHandler: (() -> Void)
-    let title: String
-        
+
     var body: some View {
         VStack {
             Spacer()
@@ -64,40 +64,31 @@ struct NavBarBB: View {
                     Image("12")
                         .resizable()
                         .aspectRatio(contentMode: .fill)
+                        .frame(width: 40, height: 40)
+                        .cornerRadius(20)
                 }
-                .frame(width: 40)
-                .frame(height: 40)
-                .cornerRadius(20)
-                .background(.red)
                 Spacer()
-                HStack {
-                    Button(action: { self.backHandler() }) {
-                        Image(systemName: "magnifyingglass")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 24)
-                            .frame(height: 24)
-                            .foregroundColor(Color.BB_TextHigh)
-                    }
-                    .frame(width: 40)
-                    .frame(height: 40)
-                    Button(action: { self.backHandler() }) {
-                        Image(systemName: "line.3.horizontal")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 24)
-                            .frame(height: 24)
-                            .foregroundColor(Color.BB_TextHigh)
-                    }
-                    .frame(width: 40)
-                    .frame(height: 40)
+                Button(action: { self.backHandler() }) {
+                    Image(systemName: "magnifyingglass")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 24, height: 24)
+                        .foregroundColor(Color.BB_TextHigh)
                 }
+                .frame(width: 40, height: 40)
+                Button(action: { self.backHandler() }) {
+                    Image(systemName: "line.3.horizontal")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 24, height: 24)
+                        .foregroundColor(Color.BB_TextHigh)
+                }
+                .frame(width: 40, height: 40)
             }
             .padding([.leading, .trailing], 12)
             Spacer()
         }
-        .background(Color.purple.edgesIgnoringSafeArea(.all))
-//        .background(Color.BB_BGPrimary.edgesIgnoringSafeArea(.all))
+        .background(Color.BB_BGPrimary.opacity(0.9).edgesIgnoringSafeArea(.all))
         .frame(height: 40)
     }
 }
